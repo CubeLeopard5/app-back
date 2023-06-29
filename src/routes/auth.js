@@ -10,13 +10,13 @@ module.exports = function(app) {
             //console.log(nickname, email, password, phone);
 
             if (!(email && password && username)) {
-                res.status(400).send("All input is required");
+                res.status(400).json({"response": "All input is required"});
             }
 
             const oldUser = await User.findOne({ email });
 
             if (oldUser) {
-                return res.status(409).send("User Already Exist. Please Login");
+                return res.status(409).json({"response": "User Already Exist. Please Login"});
             }
 
             const encryptedPassword = await bcrypt.hash(password, 10);
@@ -50,7 +50,7 @@ module.exports = function(app) {
             const { email, password } = req.body;
 
             if (!(email && password)) {
-                res.status(400).send("All input is required");
+                res.status(400).json({"response": "All input is required"});
             }
 
             const user = await User.findOne({ email });
@@ -81,7 +81,7 @@ module.exports = function(app) {
                 user.token = token;
                 res.status(200).json(user);
             }
-            res.status(400).send("Invalid Credentials");
+            res.status(400).json({"response": "Invalid Credentials"});
         } catch (err) {
             console.log(err);
         }
@@ -89,9 +89,9 @@ module.exports = function(app) {
 
     app.post("/welcome", auth, (req, res) => {
         if (req.user.role == "admin") {
-            res.status(200).send("Welcome 🙌 admin");
+            res.status(200).json({"response": "Welcome 🙌 admin"});
         } else {
-            res.status(200).send("Welcome 🙌 basic");
+            res.status(200).json({"response": "Welcome 🙌 basic"});
         }
     });
 };

@@ -2,5 +2,7 @@ Dockerfile
 docker-compose.yml
 .git*
 README.md
+*.env
+env
 node_modules
 yarn lock

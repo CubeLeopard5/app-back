@@ -1,0 +1,6 @@
+Dockerfile
+docker-compose.yml
+.git*
+README.md
+node_modules
+yarn lock

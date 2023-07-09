@@ -88,10 +88,6 @@ module.exports = function(app) {
     });
 
     app.post("/welcome", auth, (req, res) => {
-        if (req.user.role == "admin") {
-            res.status(200).json({"response": "Welcome 🙌 admin"});
-        } else {
-            res.status(200).json({"response": "Welcome 🙌 basic"});
-        }
+        res.status(200).json({"results": req.user});
     });
 };

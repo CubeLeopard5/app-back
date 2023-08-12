@@ -38,8 +38,13 @@ module.exports = function(app) {
                 { expiresIn: "2h", }
             );
             user.token = token;
-
-            res.status(201).json(user);
+            let response = {
+                token: user.token,
+                email: user.email,
+                username: user.username,
+                id: user._id,
+            }
+            res.status(201).json(response);
         } catch (err) {
             console.log(err);
         }
@@ -79,7 +84,13 @@ module.exports = function(app) {
                     );
                 }
                 user.token = token;
-                res.status(200).json(user);
+                let response = {
+                    token: user.token,
+                    email: user.email,
+                    username: user.username,
+                    id: user._id,
+                }
+                res.status(200).json(response);
             }
             res.status(400).json({"response": "Invalid Credentials"});
         } catch (err) {

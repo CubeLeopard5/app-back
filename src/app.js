@@ -1,6 +1,13 @@
 require('dotenv').config()
 require("./configs/database").connect();
+
 const express = require('express');
+
+const session = require('express-session');
+exports.session = session;
+
+const passport = require('passport');
+
 const cors = require('cors');
 const birds = require('./routes/birds');
 
@@ -16,7 +23,19 @@ app.use(bodyParser.raw());
 app.use(bodyParser.text());
 app.use('/birds', birds);
 app.use(cors());
+
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 },
+}));
+
+app.use(passport.initialize());
+
 require('./routes/auth')(app);
+require("./strategies/reddit.js")(app);
+require('./routes/reddit')(app);
 
 app.get('/', (req, res) => {
 	res.json({'response': 'Hello world'})

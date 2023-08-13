@@ -63,4 +63,28 @@ module.exports = function(app) {
         const data = await result.json();
         res.status(200).json(data);
     });
+
+    app.get("/reddit/my_subreddits", auth, async(req, res) => {
+        const result = await fetch(`https://oauth.reddit.com/subreddits/mine/subscriber?raw_json=1`, {
+            method: "GET",
+            headers: {
+                "Authorization": `bearer ${session.redditToken}`,
+            },
+        });
+        const data = await result.json();
+        res.status(200).json(data);
+    });
+
+    app.post("/reddit/subreddit_posts", auth, async(req, res) => {
+        const { subredditName } = req.body;
+
+        const result = await fetch(`https://oauth.reddit.com/r/${subredditName}?raw_json=1`, {
+            method: "GET",
+            headers: {
+                "Authorization": `bearer ${session.redditToken}`,
+            },
+        });
+        const data = await result.json();
+        res.status(200).json(data);
+    });
 };

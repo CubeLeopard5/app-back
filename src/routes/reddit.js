@@ -113,7 +113,19 @@ module.exports = function(app) {
             method: "GET",
             headers: {
                 "Authorization": `bearer ${session.redditToken}`,
-                "Content-Type": "application/x-www-form-urlencoded"
+            },
+        });
+        const data = await result.json();
+        res.status(200).json(data);
+    });
+
+    app.post("/reddit/search_subreddits_autocomplete", auth, async(req, res) => {
+        const { search } = req.body;
+
+        const result = await fetch(`https://oauth.reddit.com/api/subreddit_autocomplete_v2?query=${search}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `bearer ${session.redditToken}`,
             },
         });
         const data = await result.json();

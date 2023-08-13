@@ -87,4 +87,36 @@ module.exports = function(app) {
         const data = await result.json();
         res.status(200).json(data);
     });
+
+    app.post("/reddit/search_subreddits", auth, async(req, res) => {
+        const bodyData = {
+            query: req.body.search,
+        };
+        const bodyDataUrl = new URLSearchParams(Object.entries(bodyData)).toString();
+
+        const result = await fetch(`https://oauth.reddit.com/api/search_reddit_names`, {
+            method: "POST",
+            headers: {
+                "Authorization": `bearer ${session.redditToken}`,
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: bodyDataUrl
+        });
+        const data = await result.json();
+        res.status(200).json(data);
+    });
+
+    app.post("/reddit/search_inside_subreddit", auth, async(req, res) => {
+        const { subredditName, search } = req.body;
+
+        const result = await fetch(`https://oauth.reddit.com/r/${subredditName}/search?q=${search}&restrict_sr=true`, {
+            method: "GET",
+            headers: {
+                "Authorization": `bearer ${session.redditToken}`,
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+        });
+        const data = await result.json();
+        res.status(200).json(data);
+    });
 };

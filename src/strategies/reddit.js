@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 
 module.exports = function(app) {
     app.get('/auth/reddit', function(req, res) {
-        res.redirect(`https://www.reddit.com/api/v1/authorize?client_id=${process.env['REDDIT_CLIENT_ID']}&response_type=code&state=sdfghjkl&redirect_uri=${process.env['REDDIT_CALLBACK_URL']}&duration=permanent&scope=identity`);
+        res.redirect(`https://www.reddit.com/api/v1/authorize?client_id=${process.env['REDDIT_CLIENT_ID']}&response_type=code&state=sdfghjkl&redirect_uri=${process.env['REDDIT_CALLBACK_URL']}&duration=permanent&scope=identity privatemessages submit`);
     });
     
     app.get('/auth/reddit/callback', async function(req, res) {

@@ -24,8 +24,8 @@ module.exports = function(app) {
         });
         const data = await result.json();
         console.log(data);
-        session.redditToken = data.access_token;
+        session.reddit = data.access_token;
         console.log(session);
-        res.redirect("http://localhost:3000/home");
+        res.redirect("http://localhost:3000/services");
     });
 };

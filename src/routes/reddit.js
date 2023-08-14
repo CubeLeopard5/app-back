@@ -4,14 +4,19 @@ const session = require('express-session');
 
 module.exports = function(app) {
     app.get("/reddit/me", auth, async (req, res) => {
-        const result = await fetch(`https://oauth.reddit.com/api/v1/me`, {
-            method: "GET",
-            headers: {
-                "Authorization": `bearer ${session.redditToken}`,
-            },
-        });
-        const data = await result.json();
-        res.status(200).json(data);
+        try {
+            const result = await fetch(`https://oauth.reddit.com/api/v1/me`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `bearer ${session.reddit}`,
+                },
+            });
+            const data = await result.json();
+            res.status(200).json(data);
+        } catch (error) {
+            console.log("Error in /reddit/me: ", error);
+            res.status(500).json({ "Server": "Crash" });
+        }
     });
 
     app.post("/reddit/send_message", auth, async(req, res) => {
@@ -25,7 +30,7 @@ module.exports = function(app) {
         const result = await fetch(`https://oauth.reddit.com/api/compose`, {
             method: "POST",
             headers: {
-                "Authorization": `bearer ${session.redditToken}`,
+                "Authorization": `bearer ${session.reddit}`,
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             body: bodyDataUrl,
@@ -36,12 +41,6 @@ module.exports = function(app) {
 
     app.post("/reddit/create_publication", auth, async(req, res) => {
         const bodyData = {
-            /*description: req.body.description,
-            title: req.body.title,
-            api_type: "json",
-            nsfw: "false",
-            resources: null,*/
-
             extension: 'json',
             kind: 'self',
             resubmit: 'true',
@@ -55,7 +54,7 @@ module.exports = function(app) {
         const result = await fetch(`https://oauth.reddit.com/api/submit`, {
             method: "POST",
             headers: {
-                "Authorization": `bearer ${session.redditToken}`,
+                "Authorization": `bearer ${session.reddit}`,
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             body: bodyDataUrl,
@@ -68,7 +67,7 @@ module.exports = function(app) {
         const result = await fetch(`https://oauth.reddit.com/subreddits/mine/subscriber?raw_json=1`, {
             method: "GET",
             headers: {
-                "Authorization": `bearer ${session.redditToken}`,
+                "Authorization": `bearer ${session.reddit}`,
             },
         });
         const data = await result.json();
@@ -76,12 +75,19 @@ module.exports = function(app) {
     });
 
     app.post("/reddit/subreddit_posts", auth, async(req, res) => {
-        const { subredditName } = req.body;
+        const { subredditName, after } = req.body;
+        let url = null;
 
-        const result = await fetch(`https://oauth.reddit.com/r/${subredditName}?raw_json=1`, {
+        if (!after) {
+            url = `https://oauth.reddit.com/r/${subredditName}?raw_json=1`;
+        } else {
+            url = `https://oauth.reddit.com/r/${subredditName}?after=${after}&raw_json=1`;
+        }
+
+        const result = await fetch(url, {
             method: "GET",
             headers: {
-                "Authorization": `bearer ${session.redditToken}`,
+                "Authorization": `bearer ${session.reddit}`,
             },
         });
         const data = await result.json();
@@ -97,7 +103,7 @@ module.exports = function(app) {
         const result = await fetch(`https://oauth.reddit.com/api/search_reddit_names`, {
             method: "POST",
             headers: {
-                "Authorization": `bearer ${session.redditToken}`,
+                "Authorization": `bearer ${session.reddit}`,
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             body: bodyDataUrl
@@ -112,7 +118,7 @@ module.exports = function(app) {
         const result = await fetch(`https://oauth.reddit.com/r/${subredditName}/search?q=${search}&restrict_sr=true`, {
             method: "GET",
             headers: {
-                "Authorization": `bearer ${session.redditToken}`,
+                "Authorization": `bearer ${session.reddit}`,
             },
         });
         const data = await result.json();
@@ -125,7 +131,7 @@ module.exports = function(app) {
         const result = await fetch(`https://oauth.reddit.com/api/subreddit_autocomplete_v2?query=${search}`, {
             method: "GET",
             headers: {
-                "Authorization": `bearer ${session.redditToken}`,
+                "Authorization": `bearer ${session.reddit}`,
             },
         });
         const data = await result.json();

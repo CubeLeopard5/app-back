@@ -1,3 +1,4 @@
+const session = require("express-session");
 const auth = require("../middelwares/auth");
 const User = require("../models/user");
 const bcrypt = require('bcryptjs');
@@ -95,6 +96,16 @@ module.exports = function(app) {
             res.status(400).json({"response": "Invalid Credentials"});
         } catch (err) {
             console.log(err);
+        }
+    });
+
+    app.post("/services_connected", auth, (req, res) => {
+        const { serviceName } = req.body;
+
+        if (session[serviceName]) {
+            res.status(200).json({ "result": true });
+        } else {
+            res.status(200).json({ "result": false });
         }
     });
 

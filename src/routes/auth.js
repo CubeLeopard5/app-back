@@ -99,10 +99,20 @@ module.exports = function(app) {
         }
     });
 
-    app.post("/services_connected", auth, (req, res) => {
+    app.post("/is_service_connected", auth, (req, res) => {
         const { serviceName } = req.body;
 
         if (session[serviceName]) {
+            res.status(200).json({ "result": true });
+        } else {
+            res.status(200).json({ "result": false });
+        }
+    });
+    app.post("/disconnect_service", auth, (req, res) => {
+        const { serviceName } = req.body;
+
+        if (session[serviceName]) {
+            session[serviceName] = null;
             res.status(200).json({ "result": true });
         } else {
             res.status(200).json({ "result": false });

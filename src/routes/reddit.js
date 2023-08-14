@@ -45,7 +45,7 @@ module.exports = function(app) {
             kind: 'self',
             resubmit: 'true',
             sendreplies: 'true',
-            sr: "u_testcubedev",
+            sr: req.body.sr,
             text: req.body.description,
             title: req.body.title,
         };

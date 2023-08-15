@@ -40,27 +40,31 @@ module.exports = function(app) {
     });
 
     app.post("/reddit/create_publication", auth, async(req, res) => {
-        const bodyData = {
-            extension: 'json',
-            kind: 'self',
-            resubmit: 'true',
-            sendreplies: 'true',
-            sr: req.body.sr,
-            text: req.body.description,
-            title: req.body.title,
-        };
-        const bodyDataUrl = new URLSearchParams(Object.entries(bodyData)).toString();
-
-        const result = await fetch(`https://oauth.reddit.com/api/submit`, {
-            method: "POST",
-            headers: {
-                "Authorization": `bearer ${session.reddit}`,
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: bodyDataUrl,
+        const { sr, text, title } = req.body;
+        sr.forEach(async el => {
+            const bodyData = {
+                extension: 'json',
+                kind: 'self',
+                resubmit: 'true',
+                sendreplies: 'true',
+                sr: el,
+                text: text,
+                title: title,
+            };
+            const bodyDataUrl = new URLSearchParams(Object.entries(bodyData)).toString();
+            console.log(el, text, title);
+            const result = await fetch(`https://oauth.reddit.com/api/submit`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `bearer ${session.reddit}`,
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: bodyDataUrl,
+            });
+            const data = await result.json();
+            console.log(data);
         });
-        const data = await result.json();
-        res.status(200).json(data);
+        res.status(200).json(null);
     });
 
     app.get("/reddit/my_subreddits", auth, async(req, res) => {

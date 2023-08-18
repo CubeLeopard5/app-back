@@ -83,9 +83,9 @@ module.exports = function(app) {
         let url = null;
 
         if (!after) {
-            url = `https://oauth.reddit.com/r/${subredditName}?raw_json=1`;
+            url = `https://oauth.reddit.com/r/${subredditName}?limit=4&raw_json=1`;
         } else {
-            url = `https://oauth.reddit.com/r/${subredditName}?after=${after}&raw_json=1`;
+            url = `https://oauth.reddit.com/r/${subredditName}?after=${after}&limit=4&raw_json=1`;
         }
 
         const result = await fetch(url, {

@@ -26,6 +26,6 @@ module.exports = function(app) {
         console.log(data);
         session.reddit = data.access_token;
         console.log(session);
-        res.redirect("http://localhost:3000/services");
+        res.redirect("http://localhost:3000/comptes");
     });
 };

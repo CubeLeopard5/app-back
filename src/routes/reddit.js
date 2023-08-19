@@ -79,13 +79,13 @@ module.exports = function(app) {
     });
 
     app.post("/reddit/subreddit_posts", auth, async(req, res) => {
-        const { subredditName, after } = req.body;
+        const { subRedditName, next, limit } = req.body;
         let url = null;
 
-        if (!after) {
-            url = `https://oauth.reddit.com/r/${subredditName}?limit=4&raw_json=1`;
+        if (!next) {
+            url = `https://oauth.reddit.com/r/${subRedditName}?limit=${limit}&raw_json=1`;
         } else {
-            url = `https://oauth.reddit.com/r/${subredditName}?after=${after}&limit=4&raw_json=1`;
+            url = `https://oauth.reddit.com/r/${subRedditName}?after=${next}&limit=${limit}&raw_json=1`;
         }
 
         const result = await fetch(url, {

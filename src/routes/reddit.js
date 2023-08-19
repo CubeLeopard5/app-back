@@ -141,4 +141,34 @@ module.exports = function(app) {
         const data = await result.json();
         res.status(200).json(data);
     });
+
+    app.post("/reddit/search_user", auth, async(req, res) => {
+        const { search } = req.body;
+
+        const result = await fetch(`https://oauth.reddit.com/users/search?q=${search}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `bearer ${session.reddit}`,
+            },
+        });
+        const data = await result.json();
+        res.status(200).json(data);
+    });
+
+    app.post("/reddit/reddit_user_posts", auth, async(req, res) => {
+        const { redditUser, next, limit } = req.body;
+        let url = null;
+
+        url = `https://oauth.reddit.com/user/${redditUser}/submitted.json`;
+
+        console.log(url);
+        const result = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Authorization": `bearer ${session.reddit}`,
+            },
+        });
+        const data = await result.json();
+        res.status(200).json(data);
+    });
 };

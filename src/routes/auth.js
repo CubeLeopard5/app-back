@@ -119,7 +119,7 @@ module.exports = function(app) {
         }
     });
 
-    app.post("/welcome", auth, (req, res) => {
+    app.get("/welcome", auth, (req, res) => {
         res.status(200).json({"results": req.user});
     });
 };

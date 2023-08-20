@@ -195,15 +195,11 @@ module.exports = function(app) {
         }
     });
 
-    app.post("/reddit/reddit_user_posts", auth, async(req, res) => {
+    app.post("/reddit/get_user_posts", auth, async(req, res) => {
         try {
             const { redditUser, next, limit } = req.body;
-            let url = null;
 
-            url = `https://oauth.reddit.com/user/${redditUser}/submitted.json`;
-
-            console.log(url);
-            const result = await fetch(url, {
+            const result = await fetch(`https://oauth.reddit.com/user/${redditUser}/submitted.json`, {
                 method: "GET",
                 headers: {
                     "Authorization": `bearer ${session.reddit}`,
@@ -212,8 +208,26 @@ module.exports = function(app) {
             const data = await result.json();
             res.status(200).json(data);
         } catch (error) {
-            console.log("Error in /reddit/reddit_user_posts ", error);
-            res.status(500).json({ "Server: /reddit/reddit_user_posts": error });
+            console.log("Error in /reddit/get_user_posts ", error);
+            res.status(500).json({ "Server: /reddit/get_user_posts": error });
         }
     });
+
+    app.post("/reddit/get_post_comments", auth, async(req, res) => {
+        try {
+            const { link, subredditName } = req.body;
+
+            const result = await fetch(`https://oauth.reddit.com/r/${subredditName}/comments/${link}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `bearer ${session.reddit}`,
+                },
+            });
+            const data = await result.json();
+            res.status(200).json(data);
+        } catch (error) {
+            console.log("Error in /reddit/get_post_comments ", error);
+            res.status(500).json({ "Server: /reddit/get_post_comments": error });
+        }
+    })
 };

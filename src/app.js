@@ -35,7 +35,9 @@ app.use(passport.initialize());
 
 require('./routes/auth')(app);
 require("./strategies/reddit.js")(app);
+require("./strategies/linkedIn.js")(app);
 require('./routes/reddit')(app);
+require('./routes/linkedIn')(app);
 
 app.get('/', (req, res) => {
 	res.json({'response': 'Hello world'})

@@ -22,6 +22,8 @@ module.exports = function(app) {
     app.post("/reddit/send_message", auth, async(req, res) => {
         try {
             const bodyData = {
+                api_type: 'json',
+                from_sr: req.body.from_sr,
                 to: req.body.to,
                 subject: req.body.subject,
                 text: req.body.text,
@@ -50,6 +52,7 @@ module.exports = function(app) {
             sr.forEach(async el => {
                 const bodyData = {
                     extension: 'json',
+                    api_type: 'json',
                     kind: 'self',
                     resubmit: 'true',
                     sendreplies: 'true',
